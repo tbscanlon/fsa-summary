@@ -1,3 +1,4 @@
+import { RatingService } from './rating.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -6,7 +7,7 @@ export class FsaApiService {
   public url = 'http://api.ratings.food.gov.uk/Establishments';
   public version = '2';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private ratingService: RatingService) { }
 
   public getScores(localAuthorityId, pageSize) {
     this.http.get(
@@ -14,7 +15,7 @@ export class FsaApiService {
       {headers: new HttpHeaders().set('x-api-version', this.version)}
     )
     .subscribe(response => {
-      console.log(response);
+      this.ratingService.saveScores(response);
     });
   }
 
