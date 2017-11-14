@@ -2,22 +2,26 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class RatingService {
-  private scores = {};
+  private _scores = {};
 
   constructor() { }
+
+  get scores() {
+    return this._scores;
+  }
 
   public saveScores(json) {
     json.establishments.forEach(est => {
       this.addScore(est.RatingValue);
     });
-    console.log(this.scores);
+    console.log(this._scores);
   }
 
   private addScore(ratingValue) {
-    if (this.scores.hasOwnProperty(ratingValue)) {
-      this.scores[ratingValue] += 1;
+    if (this._scores.hasOwnProperty(ratingValue)) {
+      this._scores[ratingValue] += 1;
     } else {
-      this.scores[ratingValue] = 1;
+      this._scores[ratingValue] = 1;
     }
   }
 }

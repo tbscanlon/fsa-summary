@@ -1,3 +1,4 @@
+import { FsaApiService } from './fsa-api.service';
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -7,12 +8,17 @@ const APP_TITLE = 'FSA Summary';
 describe('AppComponent', () => {
   let fixture;
   let app;
+  let fsaStub;
 
   beforeEach(async(() => {
+    fsaStub = jasmine.createSpyObj('fsaStub', ['getScores']);
+
     TestBed.configureTestingModule({
       declarations: [ AppComponent ],
+      providers: [ {provide: FsaApiService, useValue: fsaStub} ],
       schemas: [ NO_ERRORS_SCHEMA ]
     }).compileComponents();
+
 
     fixture = TestBed.createComponent(AppComponent);
     app = fixture.debugElement.componentInstance;
