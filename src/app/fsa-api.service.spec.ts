@@ -9,12 +9,8 @@ import { FsaApiService } from './fsa-api.service';
 describe('FsaApiService', () => {
   const URL = 'http://api.ratings.food.gov.uk/Establishments';
   const VERSION = '2';
-  const JSON_MOCK = {
-    establishments: [
-      { RatingValue: 5 },
-      { RatingValue: 2 },
-    ],
-  };
+  const ID = 1;
+  const PAGE_SIZE = 1;
 
   let service: FsaApiService;
   let backend: HttpTestingController;
@@ -46,32 +42,27 @@ describe('FsaApiService', () => {
   });
 
   describe('#getScores', () => {
+    beforeEach(() => {
+      service.getScores(ID, PAGE_SIZE);
+    });
     afterEach(() => {
       backend.verify();
     });
 
     it('sends a GET request', () => {
-      service.getScores(100, 1758);
-
       const req = backend.expectOne({
-        url: `${URL}?localAuthorityId=100&pageSize=1758&pageNumber=1`,
+        url: `${URL}?localAuthorityId=${ID}&pageSize=${PAGE_SIZE}&pageNumber=1`,
         method: 'GET'
       });
-
-      req.flush(JSON_MOCK);
     });
 
     it('attaches an x-api-version header', () => {
-      service.getScores(100, 1758);
-
-      const req = backend.expectOne(`${URL}?localAuthorityId=100&pageSize=1758&pageNumber=1`);
+      const req = backend.expectOne(`${URL}?localAuthorityId=${ID}&pageSize=${PAGE_SIZE}&pageNumber=1`);
       expect(req.request.headers.has('x-api-version')).toBeTruthy();
     });
 
     it('sets the x-api-version to 2 by default', () => {
-      service.getScores(100, 1758);
-
-      const req = backend.expectOne(`${URL}?localAuthorityId=100&pageSize=1758&pageNumber=1`);
+      const req = backend.expectOne(`${URL}?localAuthorityId=${ID}&pageSize=${PAGE_SIZE}&pageNumber=1`);
       expect(req.request.headers.get('x-api-version')).toBe(VERSION);
     });
   });
