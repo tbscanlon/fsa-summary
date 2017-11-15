@@ -98,7 +98,6 @@ describe('FsaApiService', () => {
     });
 
     it('Parses the response from the API', async() => {
-      // service.getAuthorities();
       const req = backend.expectOne(`${URL}authorities/basic`);
       req.flush(MOCK_AUTHORITY);
       expect(storeMock.addAuthority).toHaveBeenCalled();
