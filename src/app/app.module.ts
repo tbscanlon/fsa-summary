@@ -10,6 +10,7 @@ import { TableRowComponent } from './table-row/table-row.component';
 
 import { FsaApiService } from './fsa-api.service';
 import { RatingService } from './rating.service';
+import { StoreService } from './store.service';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { RatingService } from './rating.service';
     BrowserModule,
     HttpClientModule,
   ],
-  providers: [FsaApiService, RatingService],
+  providers: [FsaApiService, RatingService, StoreService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

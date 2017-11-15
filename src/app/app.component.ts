@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   constructor(private fsaApi: FsaApiService) { }
 
   ngOnInit() {
+    this.fsaApi.getAuthorities();
     this.fsaApi.getScores(100, 1758);
   }
 }
