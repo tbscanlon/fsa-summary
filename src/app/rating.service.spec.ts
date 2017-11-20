@@ -1,26 +1,33 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { RatingService } from './rating.service';
+import { StoreService } from './store.service';
 
 describe('RatingService', () => {
+  const MOCK_AUTHORITY_ID = 100;
   const engJsonMock = {
     establishments: [
       {RatingValue: 5},
       {RatingValue: 2},
-    ],
+    ]
   };
-
   const sctJsonMock = {
     establishments: [
       {RatingValue: 'Pass'},
       {RatingValue: 'Needs Improvement'},
-    ],
+    ]
   };
 
   let service: RatingService;
+  let storeMock;
 
   beforeEach(() => {
-    service = new RatingService();
+    storeMock = jasmine.createSpyObj('store', ['saveScore']);
+    TestBed.configureTestingModule({
+      providers: [RatingService, {provide: StoreService, useValue: storeMock}]
+    });
+
+    service = TestBed.get(RatingService);
   });
 
   it('should be created', () => {
@@ -28,6 +35,10 @@ describe('RatingService', () => {
   });
 
   describe('#saveScores', () => {
+    xit('Saves scores to the store', () => {
+      service.saveScores(engJsonMock);
+      expect(storeMock.saveScore).toHaveBeenCalledWith(MOCK_AUTHORITY_ID);
+    });
     describe('English Ratings', () => {
       beforeEach(() => {
         service.saveScores(engJsonMock);

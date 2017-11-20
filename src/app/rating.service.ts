@@ -1,10 +1,11 @@
+import { StoreService } from './store.service';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class RatingService {
   private _scores = {};
 
-  constructor() { }
+  constructor(private storeService: StoreService) { }
 
   get scores() {
     return this._scores;
@@ -15,6 +16,8 @@ export class RatingService {
       this.addScore(est.RatingValue);
     });
     console.log(this._scores);
+    // TODO: Save the score to the relevant authority here
+    // this.storeService.saveScore()
   }
 
   private addScore(ratingValue) {

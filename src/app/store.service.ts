@@ -16,4 +16,22 @@ export class StoreService {
   public addAuthority(id: number, name: string, establishments: number) {
     this._authorities.push(new Authority(id, name, establishments));
   }
+
+  public saveScore(authorityId: number, scores: object) {
+    const authority = this.getAuthority(authorityId);
+    if (authority === undefined) {
+      throw new Error('Authority not Found');
+    }
+    authority.addScores(scores);
+  }
+
+  private getAuthority(id: number): Authority {
+    let found: Authority;
+    this.authorities.filter(element => {
+      if (element.id === id) {
+        found = element;
+      }
+    });
+    return found;
+  }
 }
