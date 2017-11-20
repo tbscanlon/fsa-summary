@@ -12,12 +12,11 @@ export class RatingService {
   }
 
   public saveScores(json) {
+    this.resetScores();
     json.establishments.forEach(est => {
       this.addScore(est.RatingValue);
     });
-    console.log(this._scores);
-    // TODO: Save the score to the relevant authority here
-    // this.storeService.saveScore()
+    return this._scores;
   }
 
   private addScore(ratingValue) {
@@ -25,6 +24,14 @@ export class RatingService {
       this._scores[ratingValue] += 1;
     } else {
       this._scores[ratingValue] = 1;
+    }
+  }
+
+  private resetScores() {
+    for (const member in this._scores) {
+      if (this._scores.hasOwnProperty(member)) {
+        delete this._scores[member];
+      }
     }
   }
 }

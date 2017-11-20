@@ -16,10 +16,10 @@ export class FsaApiService {
     private store: StoreService
   ) { }
 
-  public getScores(localAuthorityId, pageSize) {
+  public getScores(localAuthorityId: number, pageSize: number) {
     this.get(this.createEstablishmentsURL(localAuthorityId, pageSize))
     .subscribe(response => {
-      this.ratingService.saveScores(response);
+      this.store.saveScore(localAuthorityId, this.ratingService.saveScores(response));
     });
   }
 

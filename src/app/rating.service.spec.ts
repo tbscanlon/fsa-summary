@@ -3,21 +3,9 @@ import { TestBed, inject } from '@angular/core/testing';
 import { RatingService } from './rating.service';
 import { StoreService } from './store.service';
 
-describe('RatingService', () => {
-  const MOCK_AUTHORITY_ID = 100;
-  const engJsonMock = {
-    establishments: [
-      {RatingValue: 5},
-      {RatingValue: 2},
-    ]
-  };
-  const sctJsonMock = {
-    establishments: [
-      {RatingValue: 'Pass'},
-      {RatingValue: 'Needs Improvement'},
-    ]
-  };
+import { ENG_JSON, ENG_RETURN_OBJECT, SCT_JSON } from './mocks';
 
+describe('RatingService', () => {
   let service: RatingService;
   let storeMock;
 
@@ -35,13 +23,18 @@ describe('RatingService', () => {
   });
 
   describe('#saveScores', () => {
-    xit('Saves scores to the store', () => {
-      service.saveScores(engJsonMock);
-      expect(storeMock.saveScore).toHaveBeenCalledWith(MOCK_AUTHORITY_ID);
+    it('Parses and returns a score', () => {
+      expect(service.saveScores(ENG_JSON)).toEqual(ENG_RETURN_OBJECT);
     });
+
+    it('resets the score when called', () => {
+      service.saveScores(ENG_JSON);
+      expect(service.saveScores(ENG_JSON)).toEqual(ENG_RETURN_OBJECT);
+    });
+
     describe('English Ratings', () => {
       beforeEach(() => {
-        service.saveScores(engJsonMock);
+        service.saveScores(ENG_JSON);
         length = Object.keys(service.scores).length;
       });
 
@@ -50,14 +43,14 @@ describe('RatingService', () => {
       });
 
       it('does not add new keys to object on repeated scores', () => {
-        service.saveScores(engJsonMock);
+        service.saveScores(ENG_JSON);
         expect(Object.keys(service.scores).length).toEqual(length);
       });
     });
 
     describe('Scottish Ratings', () => {
       beforeEach(() => {
-        service.saveScores(sctJsonMock);
+        service.saveScores(SCT_JSON);
         length = Object.keys(service.scores).length;
       });
 
@@ -66,13 +59,8 @@ describe('RatingService', () => {
       });
 
       it('does not add new keys to object on repeated scores', () => {
-        service.saveScores(sctJsonMock);
+        service.saveScores(SCT_JSON);
         expect(Object.keys(service.scores).length).toEqual(length);
-      });
-
-      it('increments existing key on repeated scores', () => {
-        service.saveScores(sctJsonMock);
-        expect(service.scores['Pass']).toBe(2);
       });
     });
   });

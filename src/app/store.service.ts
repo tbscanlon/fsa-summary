@@ -23,6 +23,8 @@ export class StoreService {
       throw new Error('Authority not Found');
     }
     authority.addScores(scores);
+    console.log(authority);
+    // TODO: emit an event so the tableComponent can update itself
   }
 
   private getAuthority(id: number): Authority {

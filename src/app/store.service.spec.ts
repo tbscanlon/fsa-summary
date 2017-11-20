@@ -3,13 +3,9 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { StoreService } from './store.service';
 
-describe('StoreService', () => {
-  const MOCK_AUTHORITY = new Authority(100, 'Testville', 500);
-  const MOCK_SCORES = {
-    2: 1,
-    5: 1
-  };
+import { SCORES } from './mocks';
 
+describe('StoreService', () => {
   let store: StoreService;
 
   beforeEach(() => {
@@ -41,16 +37,16 @@ describe('StoreService', () => {
   describe('#saveScore', () => {
     beforeEach(() => {
       store.addAuthority(100, 'Testville', 500);
-      store.saveScore(100, MOCK_SCORES);
+      store.saveScore(100, SCORES);
     });
 
     it('Saves a score object to the selected Authority', () => {
-      expect(store.authorities[0].scores).toEqual(MOCK_SCORES);
+      expect(store.authorities[0].scores).toEqual(SCORES);
     });
 
     it('Throws an error if the Authority cannot be found', () => {
       expect(() => {
-        store.saveScore(200, MOCK_SCORES);
+        store.saveScore(200, SCORES);
       }).toThrowError('Authority not Found');
     });
   });

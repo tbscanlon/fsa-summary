@@ -1,39 +1,31 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed, inject, async, getTestBed } from '@angular/core/testing';
+import { TestBed, inject, getTestBed } from '@angular/core/testing';
 
 import { RatingService } from './rating.service';
 import { FsaApiService } from './fsa-api.service';
 import { StoreService } from './store.service';
 
+import { URL, VERSION, ID, PAGE_SIZE, AUTHORITIES, ENG_JSON } from './mocks';
 
 describe('FsaApiService', () => {
-  const URL = 'http://api.ratings.food.gov.uk/';
-  const VERSION = '2';
-  const ID = 1;
-  const PAGE_SIZE = 1;
-  const MOCK_AUTHORITY = {
-    authorities:
-    [
-      {
-        LocalAuthorityId: 100,
-        Name: 'Testville',
-        EstablishmentCount: 500
-      }
-    ]
-  };
-
   let service: FsaApiService;
   let backend: HttpTestingController;
   let http: HttpClient;
   let storeMock;
+  let ratingMock;
 
   beforeEach(() => {
-    storeMock = jasmine.createSpyObj('store', ['addAuthority']);
+    storeMock = jasmine.createSpyObj('store', ['addAuthority', 'saveScore']);
+    ratingMock = jasmine.createSpyObj('rating', ['saveScores']);
 
     TestBed.configureTestingModule({
       imports: [HttpClientModule, HttpClientTestingModule],
-      providers: [FsaApiService, RatingService, {provide: StoreService, useValue: storeMock}]
+      providers: [
+        FsaApiService,
+        {provide: RatingService, useValue: ratingMock},
+        {provide: StoreService, useValue: storeMock}
+      ]
     });
 
     service = TestBed.get(FsaApiService);
@@ -79,6 +71,18 @@ describe('FsaApiService', () => {
       const req = backend.expectOne(`${URL}Establishments?localAuthorityId=${ID}&pageSize=${PAGE_SIZE}&pageNumber=1`);
       expect(req.request.headers.get('x-api-version')).toBe(VERSION);
     });
+
+    it('sends the response to the ratingService to be parsed', () => {
+      const req = backend.expectOne(`${URL}Establishments?localAuthorityId=${ID}&pageSize=${PAGE_SIZE}&pageNumber=1`);
+      req.flush(ENG_JSON);
+      expect(ratingMock.saveScores).toHaveBeenCalled();
+    });
+
+    it('sends the response to the storeService to be saved', () => {
+      const req = backend.expectOne(`${URL}Establishments?localAuthorityId=${ID}&pageSize=${PAGE_SIZE}&pageNumber=1`);
+      req.flush(ENG_JSON);
+      expect(storeMock.saveScore).toHaveBeenCalled();
+    });
   });
 
   describe('#getAuthorities', () => {
@@ -97,9 +101,9 @@ describe('FsaApiService', () => {
       });
     });
 
-    it('Parses the response from the API', async() => {
+    it('Parses the response from the API', () => {
       const req = backend.expectOne(`${URL}authorities/basic`);
-      req.flush(MOCK_AUTHORITY);
+      req.flush(AUTHORITIES);
       expect(storeMock.addAuthority).toHaveBeenCalled();
     });
   });
