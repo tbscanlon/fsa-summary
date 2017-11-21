@@ -12,8 +12,8 @@ describe('FsaApiService', () => {
   let service: FsaApiService;
   let backend: HttpTestingController;
   let http: HttpClient;
-  let storeMock;
-  let ratingMock;
+  let storeMock: jasmine.SpyObj<StoreService>;
+  let ratingMock: jasmine.SpyObj<RatingService>;
 
   beforeEach(() => {
     storeMock = jasmine.createSpyObj('store', ['addAuthority', 'saveScore']);

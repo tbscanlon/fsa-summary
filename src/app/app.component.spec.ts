@@ -11,7 +11,7 @@ describe('AppComponent', () => {
   let fsaStub;
 
   beforeEach(async(() => {
-    fsaStub = jasmine.createSpyObj('fsaStub', ['getScores']);
+    fsaStub = jasmine.createSpyObj('fsaStub', ['getAuthorities', 'getScores']);
 
     TestBed.configureTestingModule({
       declarations: [ AppComponent ],
@@ -31,4 +31,11 @@ describe('AppComponent', () => {
   it(`should have as title 'FSA Summary'`, async(() => {
     expect(app.title).toEqual(APP_TITLE);
   }));
+
+  describe('#ngOnInit', () => {
+    it('should make an API call to get a list of Authorities', async(() => {
+      app.ngOnInit();
+      expect(fsaStub.getAuthorities).toHaveBeenCalled();
+    }));
+  });
 });
