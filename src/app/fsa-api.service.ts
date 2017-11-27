@@ -35,6 +35,10 @@ export class FsaApiService {
     });
   }
 
+  public fetchAuthorities(): Observable<any> {
+    return this.get(`${this.url}authorities/basic`);
+  }
+
   private get(url: string): Observable<object> {
     return this.http.get(
       url,

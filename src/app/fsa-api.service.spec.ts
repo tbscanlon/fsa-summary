@@ -56,7 +56,7 @@ describe('FsaApiService', () => {
     });
 
     it('sends a GET request', () => {
-      const req = backend.expectOne({
+      backend.expectOne({
         url: `${URL}Establishments?localAuthorityId=${ID}&pageSize=${PAGE_SIZE}&pageNumber=1`,
         method: 'GET'
       });
